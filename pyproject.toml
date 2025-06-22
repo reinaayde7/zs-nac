@@ -1,0 +1,15 @@
+[project]
+name = "zs_nac"
+version = "0.1.0"
+description = "Code to denoise MR images with deep-learning "
+readme = "README.md"
+requires-python = ">=3.9"
+#license = { file = "LICENSE" }
+authors = [
+    { name = "Reina Ayde", email = "reina.ayde@gmail.com" },
+]
+dependencies = [
+  "torch >=2, <3",
+  "scikit-image <1",
+  "h5py >=3, <4"
+]

@@ -1,0 +1,12 @@
+name: zs_nac_cuda
+channels:
+- pytorch
+- nvidia
+- conda-forge
+- defaults
+dependencies:
+- python
+- pytorch 
+- pytorch-cuda
+- scikit-image
+- h5py
