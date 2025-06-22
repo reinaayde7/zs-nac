@@ -61,5 +61,5 @@ Ayde R., Zihlmann G., Salameh N. and Sarracanie, M. Fast zero-shot deep learning
 
 ## Authorship:
 Reina Ayde, PhD  
-University of Aberdeen  
+University of Michigan  
 Email: reina.ayde@gmail.com
