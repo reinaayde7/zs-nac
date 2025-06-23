@@ -42,14 +42,14 @@ If input data are real or imaginary data only, the internal function of mask cre
 
 The output is a numpy array with the same shape and type of the input array.
 
-## Denoising function (nac) workflow details:
+## Denoising function (nac) workflow details
 1. Loading the numpy MRI complex or magnitude images  
 2. Creating the background mask  
 3. Estimating the noise standard deviation  
 4. training the model  
 5. Inference
 
-## Notes:
+## Notes
 - This method could work on MR images provided that the noise distribution in those images follows a Gaussian distribution or close enough.
 - This method is not recommended for non-cartesian or zero-filled k-spaces as noise in corresponding MR images won't follow a Gaussian distribution.
 - If the background is not provided or cannot be automatically inferred for some reason, please provide directly the estimated standard deviation of the noise.  
@@ -59,7 +59,3 @@ If you use this software in your work, please cite it as:
 
 Ayde R., Zihlmann G., Salameh N. and Sarracanie, M. Fast zero-shot deep learning-based denoising method for low-field MR images (2025).
 
-## Authorship:
-Reina Ayde, PhD  
-University of Michigan  
-Email: reina.ayde@gmail.com
