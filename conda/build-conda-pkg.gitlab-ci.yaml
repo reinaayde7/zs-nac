@@ -1,0 +1,76 @@
+# make sure we only run for tags...
+workflow:
+  rules:
+    - if: '$CI_COMMIT_TAG == null'
+      when: never
+    - if: '$CI_COMMIT_TAG != null'
+      when: always
+# we make the previous source a configurable variable. This will be used with curl and the gitlab job token
+# in the header.
+# fixme: this doesn't show as a prefilled value in the web GUI! bad...
+variables:
+  ADD_CONDA_BUILD_PREVIOUS_CHANNEL_DATA_ZIP_URL:
+    value: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/${CI_COMMIT_TAG}/download?job=add-conda-build"
+    description: >
+      Enter the URL (must be reachable by Gitlab CI) to a zip file for a conda-bld folder with existing package data.
+      This build will be added to it.
+      If not reachable or not a valid zip, the job will fail.
+      A special value of "CLEAR" will clear the current channel data and/or allow to start without a zip input.
+      Normally, what you want is the artifacts archive for the add-conda-build job of the PREVIOUS tag release.
+      Unfortunately, there is no way of knowing the PREVIOUS release tag, the only one available in
+      Gitlab CI is the current one, so this is what the default value is filled with. You have to change that manually!
+
+image: continuumio/miniconda3:latest
+stages:
+  - conda-build-and-test
+  - conda-add-build
+  - deploy-page
+
+build-conda-zs_nac:
+  when: manual
+  allow_failure: false  # by default, manual jobs would be allowed to fail to not stall pipeline
+  stage: conda-build-and-test
+  tags:
+    - saas-linux-large-amd64
+  image: continuumio/miniconda3:latest
+  script:
+    - apt-get update
+    - apt-get install -y git git-lfs rsync
+    - conda install -y conda-build
+    - conda build conda/ --no-anaconda-upload -c conda-forge
+    - conda build purge
+    # copy selectively, also bring the index.html along as the top-level one will not be created by conda index
+    # (I think it used to work in older conda index versions, like 0.3, but now in 0.4.0 it doesn't do that anymore)
+    - rsync -rvi -m --include="*/" --include="*.tar.bz2" --include="*.conda" --include="index.html" --exclude="*" /opt/conda/conda-bld .
+    - conda index conda-bld
+  artifacts:
+    name: conda-build-channel
+    paths:
+      - conda-bld
+    exclude:
+      - "conda-bld/**/.cache/**/*"
+      - "conda-bld/**/.cache"
+
+add-conda-generic-pkg:
+  # we upload a zip containing the entire conda-bld tree as a generic gitlab pkg.
+  # The entire tree instead of just the pkg file is because conda won't install
+  # dependencies if just given a conda archive.
+  stage: conda-add-build
+  when: manual
+  allow_failure: false  # by default, manual jobs would be allowed to fail to not stall pipeline
+  image: continuumio/miniconda3:latest
+  # with depencencies, we get the artifacts from the previous stage directly in our project dir
+  dependencies:
+    - build-conda-zs_nac
+  # version will be the tag. This pipeline is intended to be a triggered child pipeline that is only
+  # triggerable for tag pipelines
+  script:
+    - apt-get update
+    - apt-get install -y curl zip
+    # we zip the conda-bld
+    # this will horribly fail with forward slashes in the tag (which there shouldn't be, but it would be perfectly
+    # fine for git, so we convert them to underscores with shell param expansion)
+    - 'VERSIONCLEAN=${CI_COMMIT_TAG/\//_}'
+    - 'ZIPFILE=conda-bld-zs_nac-${VERSIONCLEAN}.zip'
+    - 'zip -r ${ZIPFILE} conda-bld'
+    - 'curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file ${ZIPFILE} "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/zs_nac/${VERSIONCLEAN}/${ZIPFILE}"'

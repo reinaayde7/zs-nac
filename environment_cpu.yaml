@@ -1,0 +1,11 @@
+name: zs_nac_cpu
+channels:
+- pytorch
+- nvidia
+- conda-forge
+- defaults
+dependencies:
+- python
+- pytorch
+- scikit-image
+- h5py

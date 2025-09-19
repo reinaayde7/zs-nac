@@ -1,0 +1,47 @@
+{% set name = "zs_nac" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv
+  number: 0
+
+requirements:
+  host:
+    - python
+    - setuptools
+    - pip
+  run:
+    - python
+    - pytorch
+    - scikit-image
+    - h5py
+
+#test:
+#  imports:
+#    - zs_nac
+#  source_files:
+#    - test
+#    - data
+#  commands:
+#    - pytest test
+#  requires:
+#    - pip
+#    - pytest
+
+about:
+  home: https://gitlab.com/amt-center/data-processing/deep-learning/zs_nac/
+  summary: zero-shot self-supervised deep-learning-based denoising for MRI images
+  description: zero-shot self-supervised deep-learning-based denoising for MRI images
+  doc_source_url: https://gitlab.com/amt-center/data-processing/deep-learning/zs_nac/README.md
+
+extra:
+  recipe-maintainers:
+    - reina.ayde
