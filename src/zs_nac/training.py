@@ -51,7 +51,7 @@ def training(
     while epoch <= max_epochs and val_loss_tracker < stop_training:
         # a = time.time()
         if n_chan == 1:
-            training_loss, lr_noisier2noise = train(
+            training_loss, doubly_noisy_img, lr_noisier2noise = train(
                 network,
                 train_loader,
                 gamma,
@@ -188,3 +188,4 @@ def loss_func(noisy_img, output):
 def get_lr(optimizer):
     for param_group in optimizer.param_groups:
         return param_group["lr"]
+
