@@ -1,7 +1,7 @@
 # Zero-Shot self-supervised denoising for MRI data
 ## Description
 This Python scripts is a fast zero-shot self-supervised denoising method for MRI data.  
-Paper: Fast zero-shot deep learning-based denoising method for low-field MR images (DOI:..).
+Paper: Fast zero-shot deep learning-based denoising method for low-field MR images (DOI: 10.1007/s10334-025-01311-w).
 
 ## Package installation and execution
 First, clone the repository:
@@ -55,5 +55,4 @@ The output is a numpy array with the same shape and type of the input array.
 ## Citation
 If you use this software in your work, please consider citing our paper:
 
-Ayde R., Zihlmann G., Salameh N. and Sarracanie, M. Fast zero-shot deep learning-based denoising method for low-field MR images (2025).
-
+Ayde R, Zihlmann G, Salameh N, Sarracanie M. Fast zero-shot deep learning-based denoising method for low-field MR images. MAGMA. Published online December 22, 2025. doi:10.1007/s10334-025-01311-w
