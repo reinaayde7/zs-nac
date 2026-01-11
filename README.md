@@ -19,6 +19,10 @@ Then use the function:
 ```bash
 denoised_image = nac(noisy_image, device='cuda')
 ```
+To further accelerate the training process:
+```bash
+denoised_image = nac(noisy_image, training_part=True, ratio=0.3, device='cuda')
+```
 ## Function arguments
 nac function has several arguments:
 - noisy_data: is the noisy input images. It can be complex or magnitude images.
